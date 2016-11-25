@@ -68,7 +68,6 @@ Kien.MultiTouchSupport.multiTouchThreshold = parseInt(Kien.MultiTouchSupport.par
 Kien.MultiTouchSupport.swipeThreshold = parseInt(Kien.MultiTouchSupport.parameters["Swipe Threshold"]);
 Kien.MultiTouchSupport.debugMode = eval(Kien.MultiTouchSupport.parameters["Debug Mode"]);
 
-Kien.MultiTouchSupport.isDebugMode = Kien.MultiTouchSupport.debugMode && Utils.isOptionValid('test');
 
 if (!Array.prototype.findIndex) {
   Array.prototype.findIndex = function(predicate) {
@@ -270,7 +269,6 @@ TouchInput.updateKienTouch = function() {
 		var tp = this._kienTouches[touch.identifier];
 		tp.onEnd(touch);
 	}
-	if (Kien.MultiTouchSupport.isDebugMode) {
 		for (var n = 0; n < this._kienTouchIdentifiers.length; n++) {
 			var ti = this._kienTouchIdentifiers[n];
 			var tp = this._kienTouches[ti];
