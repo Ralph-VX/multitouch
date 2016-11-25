@@ -411,14 +411,14 @@ TouchInput.isTouched = function(fingers,forceNew) {
 
 
 
-SceneManager._ttcounter = 0;
+SceneManager._extraErrroMessage = "";
 
 SceneManager.catchException = function(e) {
     if (e instanceof Error) {
-        Graphics.printError(e.name, e.message + "ttcounter: " + SceneManager._ttcounter);
+        Graphics.printError(e.name, e.message + ", " + SceneManager._extraErrroMessage);
         console.error(e.stack);
     } else {
-        Graphics.printError('UnknownError', e + "ttcounter: " + SceneManager._ttcounter);
+        Graphics.printError('UnknownError', e + ", " + SceneManager._extraErrroMessage);
     }
     AudioManager.stopAll();
     this.stop();
@@ -429,7 +429,7 @@ SceneManager.onError = function(e) {
     console.error(e.filename, e.lineno);
     try {
         this.stop();
-        Graphics.printError('Error', e.message + "ttcounter: " + SceneManager._ttcounter);
+        Graphics.printError('Error', e.message + ", " + SceneManager._extraErrroMessage);
         AudioManager.stopAll();
     } catch (e2) {
     }
