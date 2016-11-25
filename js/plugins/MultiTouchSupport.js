@@ -238,7 +238,7 @@ TouchInput.update = function() {
 
 TouchInput.clearFinishedTouch = function() {
 	var callback = function(obj) { 
-		var ti = TouchInput._kienTouchIdentifiers[obj];
+		var ti = TouchInput._kienTouchIdentifiers[obj]
 		return TouchInput._kienTouches[ti]._finish && TouchInput._kienTouches[ti]._duration <= 0; 
 	};
 	var i = this._kienTouchIdentifiers.findIndex(callback);
@@ -314,7 +314,9 @@ TouchInput._kienOnTouchMove = function(event) {
 			// Prevent unexpected error. Add a new point into list.
 			tp = new TouchPoint(t);
 			this._kienTouches[t.identifier] = tp;
-			this._kienTouchIdentifiers.push(t.identifier);
+			if (this._kienTouchIdentifiers.indexOf(t.identifier) === -1) {
+				this._kienTouchIdentifiers.push(t.identifier);
+			}
 		}
 		this._kienTouchMoveEvent.push(t);
 	}
@@ -329,7 +331,9 @@ TouchInput._kienOnTouchEnd = function(event) {
 			// Prevent unexpected error. Add a new point into list.
 			tp = new TouchPoint(t);
 			this._kienTouches[t.identifier] = tp;
-			this._kienTouchIdentifiers.push(t.identifier);
+			if (this._kienTouchIdentifiers.indexOf(t.identifier) === -1) {
+				this._kienTouchIdentifiers.push(t.identifier);
+			}
 		}
 		this._kienTouchEndEvent.push(t);
 	}
