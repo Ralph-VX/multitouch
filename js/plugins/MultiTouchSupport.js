@@ -294,7 +294,7 @@ TouchInput._kienOnTouchStart = function(event) {
 TouchInput._kienOnTouchMove = function(event) {
 	for (var n = 0; n < event.changedTouches.length; n++) {
 		var t = event.changedTouches[n];
-		var tp = this._kienTouches[t.idnetifier];
+		var tp = this._kienTouches[t.identifier];
 		if (!tp) {
 			// Prevent unexpected error. Add a new point into list.
 			tp = new TouchPoint(t);
