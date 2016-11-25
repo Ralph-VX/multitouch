@@ -294,13 +294,15 @@ TouchInput.updateKienTouch = function() {
 }
 
 TouchInput._kienOnTouchStart = function(event) {
-	SceneManager._extraErrroMessage = '' + event.changedTouches.length + ',' + event.touches.length;
 	for (var n = 0; n < event.changedTouches.length; n++) {
+		SceneManager._extraErrroMessage = '' + event.changedTouches[0].identifier;
 		var t = event.changedTouches[n];
 		var tp = new TouchPoint(t);
+		SceneManager._extraErrroMessage = ',1';
 		this._kienTouches[t.identifier] = tp;
 		this._kienNewTouches.push(tp);
 		this._kienTouchStartEvent.push(t);
+		SceneManager._extraErrroMessage = ',2';
 		if (this._kienTouchIdentifiers.indexOf(t.identifier) === -1) {
 			this._kienTouchIdentifiers.push(t.identifier);
 		}
