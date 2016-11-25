@@ -238,7 +238,7 @@ TouchInput.update = function() {
 
 TouchInput.clearFinishedTouch = function() {
 	var callback = function(obj) { 
-		var ti = this._kienTouchIdentifiers[obj]
+		var ti = this._kienTouchIdentifiers[obj];
 		return this._kienTouches[ti]._finish && this._kienTouches[ti]._duration <= 0; 
 	}.bind(this);
 	var i = this._kienTouchIdentifiers.findIndex(callback);
