@@ -60,7 +60,6 @@ ed.
 //=============================================================================
 */
 
-
 Kien.MultiTouchSupport.parameters = PluginManager.parameters("MultiTouchSupport");
 Kien.MultiTouchSupport.flikLength = parseInt(Kien.MultiTouchSupport.parameters["Flick Length"]);
 Kien.MultiTouchSupport.longTouchLength = parseInt(Kien.MultiTouchSupport.parameters["Long Touch Length"]);
@@ -295,7 +294,7 @@ TouchInput.updateKienTouch = function() {
 }
 
 TouchInput._kienOnTouchStart = function(event) {
-	SceneManager._extraErrroMessage = event.changedTouches + event.touches;
+	SceneManager._extraErrroMessage = '' + event.changedTouches.length + ',' + event.touches.length;
 	for (var n = 0; n < event.changedTouches.length; n++) {
 		var t = event.changedTouches[n];
 		var tp = new TouchPoint(t);
