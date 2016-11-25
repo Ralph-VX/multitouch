@@ -285,7 +285,7 @@ TouchInput._kienOnTouchStart = function(event) {
 		var tp = new TouchPoint(t);
 		this._kienTouches[t.identifier] = tp;
 		this._kienNewTouches.push(tp);
-		this._touchStartEvent.push(t);
+		this._kienTouchStartEvent.push(t);
 		this._kienTouchIdentifiers.push(t.identifier);
 	}
 	this._kienRemoveUnavailablePoint(event);
