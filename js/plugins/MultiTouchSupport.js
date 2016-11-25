@@ -237,15 +237,15 @@ TouchInput.update = function() {
 }
 
 TouchInput.clearFinishedTouch = function() {
-	var i;
-	var callback = function(obj, index) { i = index; return this._kienTouches[this._kienTouchIdentifiers[obj]]._finish; }.bind(this);
-	while (this._kienTouchIdentifiers.some(callback)) {
+	var callback = function(obj) { return this._kienTouches[ this._kienTouchIdentifiers[obj] ]._finish; }.bind(this);
+	var i = this._kienTouchIdentifiers.findIndex(callback);
+	while (i >= 0) {
 		var ti = this._kienTouchIdentifiers[i];
-		var ii;
-		var callback2 = function(obj, index) {ii = index; return obj._identifier == ti};
+		var callback2 = function(obj) {return obj._identifier == ti};
 		this._kienTouchIdentifiers.splice(i, 1);
-		delete this._kienTouches[ti];
-		if (this._kienNewTouches.some(callback2)) {
+		delete this._kienTouches[ti];\
+		var ii = this._kienNewTouches.findIndex(callback2);
+		if (ii >= 0) {
 			this._kienNewTouches.splice(ii, 1);
 		}
 		i = this._kienTouchIdentifiers.findIndex(callback);
