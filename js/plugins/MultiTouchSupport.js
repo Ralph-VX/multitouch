@@ -299,6 +299,7 @@ TouchInput._kienOnTouchStart = function(event) {
 		var t = event.changedTouches[n];
 		var tp = new TouchPoint(t);
 		this._kienTouches[t.identifier] = tp;
+		SceneManager._extraErrroMessage = t.identifier + this._kienTouches[t.identifier];
 		this._kienNewTouches.push(tp);
 		this._kienTouchStartEvent.push(t);
 		if (this._kienTouchIdentifiers.indexOf(t.identifier) === -1) {
