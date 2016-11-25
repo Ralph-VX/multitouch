@@ -218,7 +218,7 @@ Kien.MultiTouchSupport.TouchInput_clear = TouchInput.clear;
 TouchInput.clear = function() {
 	Kien.MultiTouchSupport.TouchInput_clear.call(this);
 	this._kienTouches = {};
-	this._kienRemainedTouches = {};
+	this._kienReturnedTouchIdentifiers = []
 	this._kienNewTouches = [];
 	this._kienTouchIdentifiers = [];
 	this._kienFrameCount = Graphics.frameCount;
@@ -237,13 +237,16 @@ TouchInput.update = function() {
 }
 
 TouchInput.clearFinishedTouch = function() {
-	var callback = function(obj) { return this._kienTouches[ this._kienTouchIdentifiers[obj] ]._finish; }.bind(this);
+	var callback = function(obj) { 
+		var ti = this._kienTouchIdentifiers[obj]
+		return this._kienTouches[ti]._finish && this._kienTouches[ti]._duration <= 0; 
+	}.bind(this);
 	var i = this._kienTouchIdentifiers.findIndex(callback);
 	while (i >= 0) {
 		var ti = this._kienTouchIdentifiers[i];
 		var callback2 = function(obj) {return obj._identifier == ti};
 		this._kienTouchIdentifiers.splice(i, 1);
-		delete this._kienTouches[ti];\
+		delete this._kienTouches[ti];
 		var ii = this._kienNewTouches.findIndex(callback2);
 		if (ii >= 0) {
 			this._kienNewTouches.splice(ii, 1);
@@ -259,15 +262,26 @@ TouchInput.clearKienEvent = function() {
 }
 
 TouchInput.updateKienTouch = function() {
+	for (var n = 0; n < this._kienTouchIdentifiers.length; n++) {
+		var ti = this._kienTouchIdentifiers[n];
+		var tp = this._kienTouches[ti];
+		if (tp._finish && tp._duration > 0) {
+			tp._duration--;
+		}
+	}
 	for (var n = 0; n < this._kienTouchMoveEvent.length; n++ ) {
 		var touch = this._kienTouchMoveEvent[n];
 		var tp = this._kienTouches[touch.identifier];
-		tp.onMove(touch);
+		if (tp) {
+			tp.onMove(touch);
+		}
 	}
 	for (var n = 0; n < this._kienTouchEndEvent.length; n++ ) {
 		var touch = this._kienTouchEndEvent[n];
 		var tp = this._kienTouches[touch.identifier];
-		tp.onEnd(touch);
+		if (tp) {
+			tp.onEnd(touch);
+		}
 	}
 	if (Kien.MultiTouchSupport.debugMode) {
 		for (var n = 0; n < this._kienTouchIdentifiers.length; n++) {
@@ -285,7 +299,9 @@ TouchInput._kienOnTouchStart = function(event) {
 		this._kienTouches[t.identifier] = tp;
 		this._kienNewTouches.push(tp);
 		this._kienTouchStartEvent.push(t);
-		this._kienTouchIdentifiers.push(t.identifier);
+		if (this._kienTouchIdentifiers.indexOf(t.identifier) === -1) {
+			this._kienTouchIdentifiers.push(t.identifier);
+		}
 	}
 	this._kienRemoveUnavailablePoint(event);
 }
@@ -308,6 +324,13 @@ TouchInput._kienOnTouchMove = function(event) {
 TouchInput._kienOnTouchEnd = function(event) {
 	for (var n = 0; n < event.changedTouches.length; n++) {
 		var t = event.changedTouches[n];
+		var tp = this._kienTouches[t.identifier];
+		if (!tp) {
+			// Prevent unexpected error. Add a new point into list.
+			tp = new TouchPoint(t);
+			this._kienTouches[t.identifier] = tp;
+			this._kienTouchIdentifiers.push(t.identifier);
+		}
 		this._kienTouchEndEvent.push(t);
 	}
 }
@@ -344,4 +367,35 @@ TouchInput._setupEventHandlers = function() {
 	document.addEventListener('touchmove', this._kienOnTouchMove.bind(this));
 	document.addEventListener('touchend', this._kienOnTouchEnd.bind(this));
 	document.addEventListener('touchcancel', this._kienOnTouchEnd.bind(this));
+}
+
+// API Space
+
+// TouchInput.isTouched(`ngers, forceNew)
+//   return null if no touch action is performed, or the amount of finger is not enough.
+//   return TouchPoint object if exists one, or an array of TouchPoint object when fingers is specified above 1.
+//   When forceNew is set to true, this operation will limit to 'new' touches only.
+TouchInput.isTouched = function(fingers,forceNew) {
+	fingers = (fingers && fingers > 0 ) ? fingers : 1;
+	if (fingers == 1) {
+		var arr = this._kienTouchIdentifiers;
+		if (!!forceNew) {
+			arr = arr.filter(function(obj) {
+				return this._kienReturnedTouchIdentifiers.indexOf(obj) === -1; 
+			}.bind(this));
+		}
+		for (var i = 0; i < arr.length; n++) {
+			var ti = arr[i];
+			var tp = this._kienTouches[ti];
+			if (tp._finish && tp._duration == 0) {
+				if (this._kienReturnedTouchIdentifiers.indexOf(tp._identifier) === -1) {
+					this._kienReturnedTouchIdentifiers.push(tp._identifier);
+				}
+				return tp;
+			}
+		}
+	} else {
+
+	}
+	return null;
 }
