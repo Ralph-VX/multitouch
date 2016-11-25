@@ -311,7 +311,6 @@ TouchInput._kienOnTouchEnd = function(event) {
 		var t = event.changedTouches[n];
 		this._kienTouchEndEvent.push(t);
 	}
-	this._kienRemoveUnavailablePoint(event);
 }
 
 // Find the identifier that is not exists in event, but still available in system.
