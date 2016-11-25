@@ -237,6 +237,7 @@ TouchInput.update = function() {
 }
 
 TouchInput.clearFinishedTouch = function() {
+	SceneManager._ttcounter = 0;
 	var callback = function(obj) { 
 		var ti = TouchInput._kienTouchIdentifiers[obj]
 		return TouchInput._kienTouches[ti]._finish && TouchInput._kienTouches[ti]._duration <= 0; 
@@ -251,6 +252,7 @@ TouchInput.clearFinishedTouch = function() {
 		if (ii >= 0) {
 			this._kienNewTouches.splice(ii, 1);
 		}
+		SceneManager._ttcounter++;
 		i = this._kienTouchIdentifiers.findIndex(callback);
 	}
 }
@@ -403,3 +405,21 @@ TouchInput.isTouched = function(fingers,forceNew) {
 	}
 	return null;
 }
+
+
+
+
+
+
+SceneManager._ttcounter = 0;
+
+SceneManager.onError = function(e) {
+    console.error(e.message);
+    console.error(e.filename, e.lineno);
+    try {
+        this.stop();
+        Graphics.printError('Error', e.message + "ttcounter: " + SceneManager._ttcounter);
+        AudioManager.stopAll();
+    } catch (e2) {
+    }
+};
