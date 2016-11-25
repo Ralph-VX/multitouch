@@ -269,6 +269,7 @@ TouchInput.updateKienTouch = function() {
 		var tp = this._kienTouches[touch.identifier];
 		tp.onEnd(touch);
 	}
+	if (Kien.MultiTouchSupport.debugMode) {
 		for (var n = 0; n < this._kienTouchIdentifiers.length; n++) {
 			var ti = this._kienTouchIdentifiers[n];
 			var tp = this._kienTouches[ti];
