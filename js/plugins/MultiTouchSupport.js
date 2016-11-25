@@ -413,6 +413,17 @@ TouchInput.isTouched = function(fingers,forceNew) {
 
 SceneManager._ttcounter = 0;
 
+SceneManager.catchException = function(e) {
+    if (e instanceof Error) {
+        Graphics.printError(e.name, e.message + "ttcounter: " + SceneManager._ttcounter);
+        console.error(e.stack);
+    } else {
+        Graphics.printError('UnknownError', e + "ttcounter: " + SceneManager._ttcounter);
+    }
+    AudioManager.stopAll();
+    this.stop();
+};
+
 SceneManager.onError = function(e) {
     console.error(e.message);
     console.error(e.filename, e.lineno);
